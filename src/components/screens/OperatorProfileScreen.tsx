@@ -17,6 +17,7 @@ import { Language, LANGUAGES_LIST, translations, getLocalizedUIString } from '@/
 interface OperatorInfo {
   name: string
   phone: string
+  operatorId?: string
   procurementCentre: string
   centreId?: string
 }
@@ -35,6 +36,7 @@ export function OperatorProfileScreen({
   operatorInfo = {
     name: 'Suresh Deshmukh',
     phone: '9822011928',
+    operatorId: 'OP-MH-501',
     procurementCentre: 'APMC-shirur'
   }
 }: OperatorProfileScreenProps) {
@@ -42,6 +44,7 @@ export function OperatorProfileScreen({
   const opName = operatorInfo.name || 'Suresh Deshmukh'
   const opPhone = operatorInfo.phone ? (operatorInfo.phone.startsWith('+91') ? operatorInfo.phone : `+91 ${operatorInfo.phone}`) : '+91 98220 11928'
   const opCentre = operatorInfo.procurementCentre || 'APMC-shirur'
+  const opId = operatorInfo.operatorId || 'OP-MH-501'
 
   return (
     <div className="space-y-5 pb-20 animate-in fade-in duration-300">
@@ -58,8 +61,8 @@ export function OperatorProfileScreen({
               {opName}
             </h2>
             <div className="flex items-center gap-2 text-xs text-amber-100 font-medium">
-              <span className="font-mono font-bold bg-white/20 px-2 py-0.5 rounded-md text-[11px]">
-                OP-MH-501
+              <span className="font-mono font-bold bg-white/20 px-2 py-0.5 rounded-md text-[11px] tracking-wide">
+                {opId}
               </span>
               <span>&bull;</span>
               <span className="truncate max-w-[200px]">{opCentre}</span>
@@ -120,6 +123,13 @@ export function OperatorProfileScreen({
         </h3>
 
         <div className="space-y-2">
+          <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
+            <span className="text-slate-500 font-medium">Operator Verified ID:</span>
+            <span className="font-mono font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200 text-[11px] flex items-center gap-1">
+              <ShieldCheck className="w-3 h-3 text-emerald-600" />
+              {opId}
+            </span>
+          </div>
           <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
             <span className="text-slate-500 font-medium">APMC Centre:</span>
             <span className="font-bold text-slate-900 text-right max-w-[220px] truncate">{opCentre}</span>

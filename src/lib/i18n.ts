@@ -3382,6 +3382,26 @@ Object.assign(COMMON_UI_TEXTS, {
   },
   recalculateDistance: {
     mr: 'पुन्हा मोजा', hi: 'पुनः जांचें', en: 'Recalculate'
+  },
+  operatorIdNumber: {
+    mr: 'ऑपरेटर ओळख क्रमांक (Operator ID No.)',
+    hi: 'ऑपरेटर पहचान संख्या (Operator ID No.)',
+    en: 'Operator ID No. (Verification)'
+  },
+  operatorIdPlaceholder: {
+    mr: 'उदा. OP-MH-501 किंवा APMC-ID',
+    hi: 'उदा. OP-MH-501 या APMC-ID',
+    en: 'e.g. OP-MH-501 or APMC-ID'
+  },
+  enterValidOperatorId: {
+    mr: 'कृपया पडताळणीसाठी वैध ऑपरेटर ओळख क्रमांक प्रविष्ट करा',
+    hi: 'कृपया सत्यापन के लिए मान्य ऑपरेटर पहचान संख्या दर्ज करें',
+    en: 'Please enter a valid Operator ID number for verification'
+  },
+  verifiedGovtOperatorBadge: {
+    mr: 'शासकीय प्रमाणित ऑपरेटर आयडी',
+    hi: 'शासकीय सत्यापित ऑपरेटर आईडी',
+    en: 'Govt. Certified Operator ID'
   }
 })
 

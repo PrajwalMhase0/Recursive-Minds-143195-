@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Sprout, Phone, ShieldCheck, ArrowRight, User, Users, CheckCircle2, Sparkles, Building2, Languages, MapPin, Search } from 'lucide-react'
+import { Sprout, Phone, ShieldCheck, ArrowRight, User, Users, CheckCircle2, Sparkles, Building2, Languages, MapPin, Search, BadgeCheck } from 'lucide-react'
 import { Language, LANGUAGES_LIST, translations, getLocalizedUIString } from '@/lib/i18n'
 import { APMC_CENTRES_LIST } from '@/components/screens/BookScreen'
 
@@ -10,6 +10,7 @@ export interface LoginPayload {
   name: string
   phone: string
   address?: string
+  operatorId?: string
   procurementCentre?: string
   centreId?: string
 }
@@ -23,6 +24,7 @@ interface AuthScreenProps {
   initialAddress?: string
   initialOperatorName?: string
   initialOperatorPhone?: string
+  initialOperatorId?: string
   initialProcurementCentre?: string
 }
 
@@ -35,6 +37,7 @@ export function AuthScreen({
   initialAddress = '',
   initialOperatorName = 'Suresh Deshmukh',
   initialOperatorPhone = '9822011928',
+  initialOperatorId = 'OP-MH-501',
   initialProcurementCentre = 'APMC-shirur'
 }: AuthScreenProps) {
   const t = translations[currentLang]
@@ -48,6 +51,7 @@ export function AuthScreen({
   // Operator fields
   const [operatorName, setOperatorName] = useState(initialOperatorName)
   const [operatorPhone, setOperatorPhone] = useState(initialOperatorPhone)
+  const [operatorId, setOperatorId] = useState(initialOperatorId)
   const [selectedCentreId, setSelectedCentreId] = useState(() => {
     const found = APMC_CENTRES_LIST.find((c) => c.name === initialProcurementCentre || c.id === initialProcurementCentre)
     return found ? found.id : APMC_CENTRES_LIST[13]?.id || 'apmc_shirur'
@@ -88,6 +92,11 @@ export function AuthScreen({
         setErrorMsg(t.enterMobileNumber)
         return
       }
+      const cleanOperatorId = operatorId.trim().toUpperCase()
+      if (!cleanOperatorId) {
+        setErrorMsg(getLocalizedUIString('enterValidOperatorId', currentLang))
+        return
+      }
       const centreObj = APMC_CENTRES_LIST.find((c) => c.id === selectedCentreId) || APMC_CENTRES_LIST[0]
       if (!centreObj) {
         setErrorMsg(getLocalizedUIString('enterValidCentre', currentLang))
@@ -98,6 +107,7 @@ export function AuthScreen({
         role: 'operator',
         name: operatorName.trim(),
         phone: cleanPhone,
+        operatorId: cleanOperatorId,
         procurementCentre: centreObj.name,
         centreId: centreObj.id
       })
@@ -118,10 +128,11 @@ export function AuthScreen({
     })
   }
 
-  const handleQuickLoginOperator = (name: string, phoneNumber: string, centreId: string) => {
+  const handleQuickLoginOperator = (name: string, phoneNumber: string, centreId: string, idNo: string = 'OP-MH-501') => {
     setRole('operator')
     setOperatorName(name)
     setOperatorPhone(phoneNumber)
+    setOperatorId(idNo)
     setSelectedCentreId(centreId)
     setErrorMsg('')
     const centreObj = APMC_CENTRES_LIST.find((c) => c.id === centreId) || APMC_CENTRES_LIST[0]
@@ -129,6 +140,7 @@ export function AuthScreen({
       role: 'operator',
       name,
       phone: phoneNumber,
+      operatorId: idNo,
       procurementCentre: centreObj.name,
       centreId: centreObj.id
     })
@@ -394,11 +406,58 @@ export function AuthScreen({
                   </p>
                 </div>
 
-                {/* 3. Procurement Center */}
+                {/* 3. Operator ID Number for verification */}
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <span className="flex items-center justify-center h-4 w-4 rounded-full bg-amber-600 text-white text-[10px] font-bold">3</span>
+                      <BadgeCheck className="w-3.5 h-3.5 text-amber-600" />
+                      <span>
+                        {getLocalizedUIString('operatorIdNumber', currentLang)}
+                      </span>
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                      <span>
+                        {getLocalizedUIString('verifiedGovtOperatorBadge', currentLang)}
+                      </span>
+                    </span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      value={operatorId}
+                      onChange={(e) => setOperatorId(e.target.value.toUpperCase())}
+                      placeholder={getLocalizedUIString('operatorIdPlaceholder', currentLang)}
+                      className="w-full px-4 py-3 rounded-2xl bg-slate-50 border border-slate-200 text-slate-900 font-mono font-bold text-sm tracking-wider uppercase focus:bg-white focus:border-amber-500 focus:ring-2 focus:ring-amber-100 focus:outline-none transition-all placeholder:text-slate-400 placeholder:normal-case placeholder:font-sans"
+                    />
+                  </div>
+                  {/* Quick sample IDs */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <span className="text-[10px] text-slate-400 font-medium">Sample IDs:</span>
+                    {['OP-MH-501', 'OP-MH-802', 'OP-PUNE-103'].map((sampleId) => (
+                      <button
+                        key={sampleId}
+                        type="button"
+                        onClick={() => setOperatorId(sampleId)}
+                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg border transition-all ${
+                          operatorId === sampleId
+                            ? 'bg-amber-100 text-amber-900 border-amber-300'
+                            : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                        }`}
+                      >
+                        {sampleId}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 4. Procurement Center */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <span className="flex items-center justify-center h-4 w-4 rounded-full bg-amber-600 text-white text-[10px] font-bold">4</span>
                       <Building2 className="w-3.5 h-3.5 text-amber-600" />
                       <span>
                         {getLocalizedUIString('selectProcurementCentre', currentLang)}
@@ -497,11 +556,11 @@ export function AuthScreen({
               </button>
               <button
                 type="button"
-                onClick={() => handleQuickLoginOperator('Suresh Deshmukh', '9822011928', 'apmc_shirur')}
+                onClick={() => handleQuickLoginOperator('Suresh Deshmukh', '9822011928', 'apmc_shirur', 'OP-MH-501')}
                 className="p-2 rounded-xl bg-amber-50 hover:bg-amber-100/80 border border-amber-200 text-amber-800 text-[11px] font-semibold text-center transition-colors flex flex-col items-center justify-center"
               >
                 <span>🏢 Suresh Deshmukh</span>
-                <span className="text-[9px] text-amber-700 font-normal">APMC Shirur</span>
+                <span className="text-[9px] text-amber-700 font-normal">APMC Shirur &bull; OP-MH-501</span>
               </button>
             </div>
           </div>

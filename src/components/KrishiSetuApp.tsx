@@ -44,11 +44,13 @@ export function KrishiSetuApp({
   const [operatorInfo, setOperatorInfo] = useState<{
     name: string
     phone: string
+    operatorId: string
     procurementCentre: string
     centreId: string
   }>({
     name: 'Suresh Deshmukh',
     phone: '9822011928',
+    operatorId: 'OP-MH-501',
     procurementCentre: 'APMC-shirur',
     centreId: 'apmc_shirur'
   })
@@ -127,12 +129,14 @@ export function KrishiSetuApp({
 
       const savedOpName = localStorage.getItem('krishisetu_operator_name')
       const savedOpPhone = localStorage.getItem('krishisetu_operator_phone')
+      const savedOpId = localStorage.getItem('krishisetu_operator_id')
       const savedOpCentre = localStorage.getItem('krishisetu_operator_centre')
       const savedOpCentreId = localStorage.getItem('krishisetu_operator_centre_id')
-      if (savedOpName || savedOpPhone || savedOpCentre) {
+      if (savedOpName || savedOpPhone || savedOpCentre || savedOpId) {
         setOperatorInfo({
           name: savedOpName || 'Suresh Deshmukh',
           phone: savedOpPhone || '9822011928',
+          operatorId: savedOpId || 'OP-MH-501',
           procurementCentre: savedOpCentre || 'APMC-shirur',
           centreId: savedOpCentreId || 'apmc_shirur'
         })
@@ -277,6 +281,7 @@ export function KrishiSetuApp({
       const newOp = {
         name: name.trim() || 'Suresh Deshmukh',
         phone: phone.trim() || '9822011928',
+        operatorId: payload.operatorId?.trim().toUpperCase() || 'OP-MH-501',
         procurementCentre: procurementCentre || 'APMC-shirur',
         centreId: centreId || 'apmc_shirur'
       }
@@ -284,6 +289,7 @@ export function KrishiSetuApp({
       try {
         localStorage.setItem('krishisetu_operator_name', newOp.name)
         localStorage.setItem('krishisetu_operator_phone', newOp.phone)
+        localStorage.setItem('krishisetu_operator_id', newOp.operatorId)
         localStorage.setItem('krishisetu_operator_centre', newOp.procurementCentre)
         localStorage.setItem('krishisetu_operator_centre_id', newOp.centreId)
       } catch {}
@@ -303,6 +309,7 @@ export function KrishiSetuApp({
       localStorage.removeItem('krishisetu_farmer_address')
       localStorage.removeItem('krishisetu_operator_name')
       localStorage.removeItem('krishisetu_operator_phone')
+      localStorage.removeItem('krishisetu_operator_id')
       localStorage.removeItem('krishisetu_operator_centre')
       localStorage.removeItem('krishisetu_operator_centre_id')
     } catch {}
@@ -325,6 +332,7 @@ export function KrishiSetuApp({
         initialAddress={currentFarmer.village ? `${currentFarmer.village}, ${currentFarmer.district}` : 'Shirur, Pune Dist.'}
         initialOperatorName={operatorInfo.name}
         initialOperatorPhone={operatorInfo.phone}
+        initialOperatorId={operatorInfo.operatorId}
         initialProcurementCentre={operatorInfo.procurementCentre}
       />
     )
